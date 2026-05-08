@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>QuickHire Sydney</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0F172A;font-family:'Sora',sans-serif;color:#E2E8F0;display:flex;justify-content:center;min-height:100vh}
+  #app{width:100%;max-width:420px;min-height:100vh;position:relative;background:#0F172A;overflow-x:hidden}
+
+  /* HEADER */
+  .header{background:linear-gradient(180deg,#1E293B 0%,#0F172A 100%);padding:16px 20px 12px;border-bottom:1px solid #1E293B;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+  .logo{font-size:18px;font-weight:900;background:linear-gradient(90deg,#6366F1,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .back-btn{background:none;border:none;color:#94A3B8;font-size:22px;cursor:pointer;padding:4px 8px}
+
+  /* NAV BAR */
+  .nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#1E293B;border-top:1px solid #334155;display:flex;justify-content:space-around;padding:10px 0 18px;z-index:20}
+  .nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:#475569;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;padding:4px 10px}
+  .nav-btn.active{color:#6366F1}
+  .nav-btn span.icon{font-size:22px}
+
+  /* SCREENS */
+  .screen{display:none;padding-bottom:90px}
+  .screen.active{display:block}
+  #chat-detail-screen{display:none;flex-direction:column;height:100vh}
+  #chat-detail-screen.active{display:flex}
+
+  /* CARDS */
+  .card{background:#1E293B;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #334155;cursor:pointer}
+  .card:hover{border-color:#6366F155;transform:translateY(-1px);transition:all .15s}
+
+  /* BUTTONS */
+  .btn-primary{background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border:none;border-radius:12px;padding:12px 24px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Sora',sans-serif;box-shadow:0 4px 15px #6366F144;width:100%}
+  .btn-secondary{background:#1E293B;color:#94A3B8;border:1px solid #334155;border-radius:12px;padding:12px 24px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Sora',sans-serif}
+  .btn-outline{background:transparent;color:#6366F1;border:2px solid #6366F1;border-radius:12px;padding:12px 24px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Sora',sans-serif;width:100%}
+  .btn-apply{background:#1E293B;border:1px solid #6366F1;color:#6366F1;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Sora',sans-serif}
+  .btn-apply.applied{border-color:#22C55E;color:#22C55E;cursor:default}
+  button:disabled{opacity:.7}
+
+  /* INPUTS */
+  input,textarea{width:100%;background:#1E293B;border:1px solid #334155;border-radius:12px;padding:12px 16px;color:#E2E8F0;font-size:15px;font-family:'Sora',sans-serif;outline:none}
+  textarea{min-height:100px;resize:vertical}
+  input::placeholder,textarea::placeholder{color:#475569}
+
+  /* BADGE */
+  .badge{border-radius:6px;padding:2px 10px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+
+  /* AVATAR */
+  .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;flex-shrink:0}
+
+  /* HERO BANNER */
+  .hero{background:linear-gradient(135deg,#6366F1 0%,#8B5CF6 50%,#06B6D4 100%);border-radius:20px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
+  .hero::after{content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:#fff;opacity:.05;border-radius:50%}
+
+  /* CATEGORY FILTER */
+  .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:4px;scrollbar-width:none}
+  .cat-scroll::-webkit-scrollbar{display:none}
+  .cat-btn{flex-shrink:0;padding:8px 16px;border-radius:20px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Sora',sans-serif;background:#1E293B;color:#64748B;border:1px solid #334155;transition:all .15s}
+  .cat-btn.active{background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border:none;box-shadow:0 4px 12px #6366F144}
+
+  /* GRID */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+  .stat-card{background:#1E293B;border-radius:14px;padding:14px 10px;text-align:center;border:1px solid #334155}
+
+  /* STARS */
+  .stars{color:#FBBF24;font-size:13px;letter-spacing:-1px}
+  .stars .rating-num{color:#94A3B8;margin-left:4px;font-size:12px}
+
+  /* CHAT */
+  .chat-bubble{max-width:75%;padding:10px 14px;font-size:14px;line-height:1.5}
+  .chat-bubble.me{background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border-radius:16px 16px 4px 16px;margin-left:auto}
+  .chat-bubble.them{background:#1E293B;color:#E2E8F0;border:1px solid #334155;border-radius:16px 16px 16px 4px}
+  .chat-time{font-size:11px;opacity:.6;margin-top:4px;text-align:right}
+
+  /* TOAST */
+  .toast{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#22C55E;color:#fff;padding:20px 32px;border-radius:20px;font-weight:800;font-size:18px;z-index:100;box-shadow:0 8px 32px #22C55E44}
+  .toast.show{display:block}
+
+  /* INFO LABEL */
+  .info-label{font-size:12px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+
+  /* INLINE ROW */
+  .row{display:flex;align-items:center;gap:12px}
+  .flex-1{flex:1}
+  .text-right{text-align:right}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── HOME SCREEN ── -->
+  <div id="home-screen" class="screen active">
+    <div class="header">
+      <div>
+        <div class="logo">QuickHire Sydney</div>
+        <div style="font-size:11px;color:#475569;margin-top:1px">📍 Sydney, NSW</div>
+      </div>
+      <button id="header-login-btn" onclick="goLogin()" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);border:none;border-radius:10px;padding:7px 14px;color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:'Sora',sans-serif">Log In</button>
+    </div>
+    <div style="padding:16px 16px 0">
+      <div class="hero">
+        <div style="font-size:13px;color:#C7D2FE;font-weight:700;margin-bottom:4px">QUICK JOBS AVAILABLE</div>
+        <div style="font-size:26px;font-weight:900;color:#fff;margin-bottom:4px" id="hero-count">5 jobs nearby</div>
+        <div style="font-size:13px;color:#A5B4FC">Earn cash today in Sydney</div>
+      </div>
+      <div class="cat-scroll" id="cat-scroll"></div>
+      <div style="font-size:13px;color:#475569;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px" id="job-count-label"></div>
+      <div id="job-list"></div>
+    </div>
+  </div>
+
+  <!-- ── POST SCREEN ── -->
+  <div id="post-screen" class="screen">
+    <div class="header">
+      <span class="logo">QuickHire</span>
+      <span style="font-weight:800;font-size:17px">Post a Job</span>
+      <div style="width:60px"></div>
+    </div>
+    <div style="padding:20px 20px 0">
+      <div id="post-login-warning" style="display:none;background:#F9731622;border:1px solid #F9731644;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;color:#F97316">
+        ⚠️ You need to <a onclick="goLogin()" style="color:#F97316;font-weight:800;cursor:pointer;text-decoration:underline">log in</a> to post a job.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div><label class="info-label">💼 Title</label><input id="post-title" placeholder="Job title (e.g. Barista cover for one day)"/></div>
+        <div><label class="info-label">📅 Date</label><input id="post-date" placeholder="Date & time (e.g. Today, 3:00 PM)"/></div>
+        <div><label class="info-label">💰 Budget</label><input id="post-budget" placeholder="Budget (e.g. $150)"/></div>
+        <div><label class="info-label">📍 Location</label><input id="post-location" placeholder="Location in Sydney (e.g. Newtown NSW 2042)"/></div>
+        <div>
+          <label class="info-label">🗂 Category</label>
+          <select id="post-category" style="width:100%;background:#1E293B;border:1px solid #334155;border-radius:12px;padding:12px 16px;color:#E2E8F0;font-size:15px;font-family:'Sora',sans-serif;outline:none">
+            <option>Moving</option><option>Hospitality</option><option>Errands</option><option>Events</option><option>Garden</option>
+          </select>
+        </div>
+        <div><label class="info-label">📍 Contact</label><input id="post-contact" placeholder="Your contact (kept private in app)"/></div>
+        <div><label class="info-label">📝 Description</label><textarea id="post-desc" placeholder="Describe the job, what's needed, physical requirements..."></textarea></div>
+        <button class="btn-primary" onclick="publishJob()" style="margin-top:4px;margin-bottom:24px">🚀 Publish Job Post</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHAT LIST SCREEN ── -->
+  <div id="chat-screen" class="screen">
+    <div class="header">
+      <span class="logo">QuickHire</span>
+      <span style="font-weight:800;font-size:17px">Messages</span>
+      <div style="width:60px"></div>
+    </div>
+    <div style="padding:16px 16px 0" id="chat-list"></div>
+  </div>
+
+  <!-- ── CHAT DETAIL SCREEN ── -->
+  <div id="chat-detail-screen">
+    <div class="header">
+      <button class="back-btn" onclick="goScreen('chat')">←</button>
+      <div style="text-align:center">
+        <div style="font-weight:800;font-size:15px" id="chat-employer-name"></div>
+        <div style="font-size:12px;color:#22C55E">● Online</div>
+      </div>
+      <div style="width:30px"></div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px 16px 0" id="chat-messages-box">
+      <div id="chat-job-header" style="background:#1E293B;border-radius:12px;padding:10px 14px;margin-bottom:16px;border:1px solid #334155;font-size:13px;color:#64748B;text-align:center"></div>
+      <div id="chat-messages"></div>
+    </div>
+    <div style="padding:12px 16px 28px;background:#1E293B;border-top:1px solid #334155;display:flex;gap:10px">
+      <input id="msg-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()" style="flex:1"/>
+      <button class="btn-primary" onclick="sendMsg()" style="width:auto;padding:12px 18px">➤</button>
+    </div>
+  </div>
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div id="login-screen" class="screen">
+    <div class="header">
+      <button class="back-btn" onclick="goScreen('home')">←</button>
+      <span class="logo">QuickHire Sydney</span>
+      <div style="width:30px"></div>
+    </div>
+    <div style="padding:32px 24px">
+      <div style="text-align:center;margin-bottom:32px">
+        <div style="font-size:48px;margin-bottom:12px">🦘</div>
+        <h2 style="font-size:24px;font-weight:900;color:#F1F5F9" id="login-title">Welcome back</h2>
+        <p style="color:#64748B;margin-top:6px;font-size:14px">Sydney workers & employers only</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div id="register-fields" style="display:none;display:flex;flex-direction:column;gap:12px">
+          <input id="login-name" placeholder="Full name"/>
+          <input id="login-phone" placeholder="Phone number (hidden from others)"/>
+        </div>
+        <input id="login-email" placeholder="Email address"/>
+        <input id="login-password" type="password" placeholder="Password"/>
+        <div id="sydney-notice" style="display:none;background:#0F172A;border-radius:10px;padding:10px 14px;font-size:12px;color:#64748B">
+          📍 You must be located in Sydney, NSW to use this platform.
+        </div>
+        <button class="btn-primary" onclick="doLogin()" id="login-submit-btn" style="margin-top:8px">Log In</button>
+        <button onclick="toggleLoginStep()" style="background:none;border:none;color:#6366F1;font-size:14px;cursor:pointer;font-family:'Sora',sans-serif;margin-top:4px" id="login-toggle-btn">
+          Don't have an account? Sign up
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROFILE SCREEN ── -->
+  <div id="profile-screen" class="screen">
+    <div class="header">
+      <span class="logo">QuickHire</span>
+      <span style="font-weight:800;font-size:17px">My Profile</span>
+      <div style="width:60px"></div>
+    </div>
+    <div style="padding:24px 20px 0">
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:28px">
+        <div class="avatar" style="width:80px;height:80px;background:linear-gradient(135deg,#6366F1,#6366F199);font-size:28px;box-shadow:0 2px 8px #6366F144" id="profile-avatar">YO</div>
+        <h2 style="margin:14px 0 4px;font-size:22px;font-weight:900" id="profile-name">Your Name</h2>
+        <p style="color:#64748B;font-size:14px">📍 Sydney, NSW</p>
+        <div style="margin-top:8px"><span class="stars">★★★★★<span class="rating-num">4.8</span></span></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <span style="background:#22C55E22;color:#22C55E;border:1px solid #22C55E44;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700">✓ Email Verified</span>
+          <span style="background:#22C55E22;color:#22C55E;border:1px solid #22C55E44;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700">✓ Phone Verified</span>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="stat-card"><div style="font-size:24px;font-weight:900;color:#6366F1">7</div><div style="font-size:11px;color:#64748B;margin-top:4px">Jobs Done</div></div>
+        <div class="stat-card"><div style="font-size:24px;font-weight:900;color:#6366F1">4.8</div><div style="font-size:11px;color:#64748B;margin-top:4px">Rating</div></div>
+        <div class="stat-card"><div style="font-size:24px;font-weight:900;color:#6366F1" id="applied-count">0</div><div style="font-size:11px;color:#64748B;margin-top:4px">Applied</div></div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-weight:800;margin-bottom:10px;color:#F1F5F9">⭐ Recent Reviews</div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:700;font-size:14px">Luna Café</span><span class="stars">★★★★★</span></div>
+          <p style="font-size:13px;color:#94A3B8">Super reliable, came on time and did great work!</p>
+        </div>
+        <div style="border-top:1px solid #334155;padding-top:12px;margin-top:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:700;font-size:14px">James R.</span><span class="stars">★★★★★</span></div>
+          <p style="font-size:13px;color:#94A3B8">Strong, fast, professional. Would hire again.</p>
+        </div>
+      </div>
+      <button class="btn-outline" onclick="doLogout()" style="margin-bottom:24px">Log Out</button>
+    </div>
+  </div>
+
+  <!-- ── JOB DETAIL SCREEN ── -->
+  <div id="job-screen" class="screen">
+    <div class="header">
+      <button class="back-btn" onclick="goScreen('home')">←</button>
+      <span style="font-weight:800;font-size:16px">Job Details</span>
+      <div style="width:30px"></div>
+    </div>
+    <div style="padding:20px 20px 0" id="job-detail-body"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="nav-bar" id="nav-bar">
+    <button class="nav-btn active" id="nav-home" onclick="goScreen('home')"><span class="icon">🏠</span>Jobs</button>
+    <button class="nav-btn" id="nav-post" onclick="goScreen('post')"><span class="icon">✍️</span>Post</button>
+    <button class="nav-btn" id="nav-chat" onclick="goScreen('chat')"><span class="icon">💬</span>Chat</button>
+    <button class="nav-btn" id="nav-profile" onclick="goLoginOrProfile()"><span class="icon">👤</span><span id="nav-profile-label">Login</span></button>
+  </nav>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">✅ Application Sent!</div>
+
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────
+let state = {
+  loggedIn: false,
+  userName: "",
+  applied: [],
+  jobs: [],
+  loginStep: "login",
+  currentJobId: null,
+  currentChatJobId: null,
+  categoryFilter: "All",
+};
+
+const CATEGORIES = ["All","Moving","Hospitality","Errands","Events","Garden"];
+const AVATAR_COLORS = ["#6366F1","#F97316","#8B5CF6","#06B6D4","#EC4899","#22C55E"];
+const CAT_COLORS = {Moving:"#F97316",Hospitality:"#8B5CF6",Errands:"#06B6D4",Events:"#EC4899",Garden:"#22C55E"};
+
+// ── INIT ───────────────────────────────────────────────────
+async function init() {
+  const s = await fetch("/api/session").then(r=>r.json());
+  state.loggedIn = s.logged_in;
+  state.userName = s.user_name;
+  state.applied  = s.applied || [];
+  updateAuthUI();
+  await loadJobs();
+  renderCats();
+  renderChatList();
+}
+
+async function loadJobs() {
+  state.jobs = await fetch(`/api/jobs?category=${state.categoryFilter}`).then(r=>r.json());
+  renderJobs();
+}
+
+// ── SCREENS ────────────────────────────────────────────────
+function goScreen(name) {
+  // hide all
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('chat-detail-screen').classList.remove('active');
+  document.getElementById('nav-bar').style.display = 'flex';
+
+  if (name === 'chat-detail') {
+    document.getElementById('chat-detail-screen').classList.add('active');
+    document.getElementById('nav-bar').style.display = 'none';
+  } else {
+    const el = document.getElementById(name+'-screen');
+    if (el) el.classList.add('active');
+  }
+
+  // nav highlight
+  ['home','post','chat','profile'].forEach(n => {
+    document.getElementById('nav-'+n).classList.remove('active');
+  });
+  const navMap = {'job':'home','chat-detail':'chat'};
+  const navActive = navMap[name] || name;
+  if (document.getElementById('nav-'+navActive))
+    document.getElementById('nav-'+navActive).classList.add('active');
+
+  // special setup
+  if (name === 'post') {
+    document.getElementById('post-login-warning').style.display = state.loggedIn ? 'none' : 'block';
+  }
+  if (name === 'chat') renderChatList();
+  if (name === 'profile') renderProfile();
+}
+
+function goLogin() { goScreen('login'); }
+function goLoginOrProfile() { goScreen(state.loggedIn ? 'profile' : 'login'); }
+
+// ── RENDER JOBS ────────────────────────────────────────────
+function renderJobs() {
+  const list = document.getElementById('job-list');
+  const count = document.getElementById('job-count-label');
+  count.textContent = `${state.jobs.length} jobs · Sorted by: Recent`;
+  document.getElementById('hero-count').textContent = `${state.jobs.length} jobs nearby`;
+
+  list.innerHTML = state.jobs.map((job, i) => {
+    const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
+    const catColor = CAT_COLORS[job.category] || '#64748B';
+    const isApplied = state.applied.includes(job.id);
+    const stars = '★'.repeat(Math.floor(job.rating)) + '☆'.repeat(5-Math.floor(job.rating));
+    return `
+    <div class="card" onclick="openJob(${job.id})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div class="row flex-1">
+          <div class="avatar" style="width:44px;height:44px;background:linear-gradient(135deg,${color},${color}99);font-size:15px;box-shadow:0 2px 8px ${color}44">${job.avatar}</div>
+          <div>
+            <div style="font-weight:900;font-size:15px;color:#F1F5F9;line-height:1.2">${job.title}</div>
+            <div style="font-size:12px;color:#64748B;margin-top:2px">${job.employer} · <span style="color:#FBBF24">${stars}</span><span style="color:#94A3B8;font-size:12px"> ${job.rating}</span></div>
+          </div>
+        </div>
+        <div style="font-size:20px;font-weight:900;color:#6366F1;flex-shrink:0">${job.budget}</div>
+      </div>
+      <p style="margin:0 0 10px;font-size:13px;color:#94A3B8;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${job.description}</p>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge" style="background:${catColor}22;color:${catColor};border:1px solid ${catColor}44">${job.category}</span>
+          <span style="background:#0F172A;color:#64748B;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700">📅 ${job.date}</span>
+        </div>
+        <button class="btn-apply ${isApplied?'applied':''}" onclick="applyJob(event,${job.id})" ${isApplied?'disabled':''}>
+          ${isApplied ? '✅' : 'Apply'}
+        </button>
+      </div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:4px">
+        <span style="font-size:11px;color:#475569">📍</span>
+        <span style="font-size:12px;color:#475569">${job.location}</span>
+        <span style="margin-left:auto;font-size:11px;color:#334155">${job.posted}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── CATEGORIES ─────────────────────────────────────────────
+function renderCats() {
+  const el = document.getElementById('cat-scroll');
+  el.innerHTML = CATEGORIES.map(cat => `
+    <button class="cat-btn ${cat===state.categoryFilter?'active':''}" onclick="filterCat('${cat}')">${cat}</button>
+  `).join('');
+}
+
+async function filterCat(cat) {
+  state.categoryFilter = cat;
+  renderCats();
+  await loadJobs();
+}
+
+// ── JOB DETAIL ─────────────────────────────────────────────
+function openJob(id) {
+  const job = state.jobs.find(j=>j.id===id);
+  if (!job) return;
+  state.currentJobId = id;
+  const color = AVATAR_COLORS[id % AVATAR_COLORS.length];
+  const catColor = CAT_COLORS[job.category] || '#64748B';
+  const isApplied = state.applied.includes(job.id);
+  const stars = '★'.repeat(Math.floor(job.rating)) + '☆'.repeat(5-Math.floor(job.rating));
+  document.getElementById('job-detail-body').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div style="flex:1">
+        <span class="badge" style="background:${catColor}22;color:${catColor};border:1px solid ${catColor}44">${job.category}</span>
+        <h2 style="font-size:22px;font-weight:900;margin:8px 0 4px;color:#F1F5F9;line-height:1.2">${job.title}</h2>
+        <p style="color:#64748B;font-size:13px">Posted ${job.posted}</p>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:26px;font-weight:900;color:#6366F1">${job.budget}</div>
+        <div style="font-size:12px;color:#64748B">total pay</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div style="background:#1E293B;border-radius:12px;padding:12px 14px;border:1px solid #334155">
+        <div style="font-size:18px;margin-bottom:4px">📅</div>
+        <div style="font-size:11px;color:#64748B;margin-bottom:2px">Date</div>
+        <div style="font-size:13px;font-weight:700;color:#E2E8F0">${job.date}</div>
+      </div>
+      <div style="background:#1E293B;border-radius:12px;padding:12px 14px;border:1px solid #334155">
+        <div style="font-size:18px;margin-bottom:4px">⭐</div>
+        <div style="font-size:11px;color:#64748B;margin-bottom:2px">Employer Rating</div>
+        <div style="font-size:13px;font-weight:700;color:#E2E8F0">${job.rating} (${job.reviews} reviews)</div>
+      </div>
+    </div>
+    <div style="background:#1E293B;border-radius:14px;padding:16px;margin-bottom:14px;border:1px solid #334155">
+      <div class="info-label" style="margin-bottom:6px">📝 Description</div>
+      <p style="font-size:15px;line-height:1.6;color:#CBD5E1">${job.description}</p>
+    </div>
+    <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(job.location)}','_blank')"
+      style="background:#1E293B;border-radius:14px;padding:14px 16px;border:1px solid #334155;width:100%;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;color:inherit;font-family:'Sora',sans-serif">
+      <div>
+        <div class="info-label" style="margin-bottom:4px">📍 Location</div>
+        <div style="color:#6366F1;font-weight:700;font-size:15px">${job.location}</div>
+      </div>
+      <span style="color:#6366F1;font-size:20px">↗</span>
+    </button>
+    <div style="background:#1E293B;border-radius:14px;padding:14px 16px;border:1px solid #334155;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+      <div class="avatar" style="width:40px;height:40px;background:linear-gradient(135deg,${color},${color}99);font-size:14px;box-shadow:0 2px 8px ${color}44">${job.avatar}</div>
+      <div>
+        <div class="info-label">Posted by</div>
+        <div style="font-weight:800;font-size:16px;color:#F1F5F9">${job.employer}</div>
+        <span class="stars">${stars}<span class="rating-num">${job.rating}</span></span>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;padding-bottom:30px">
+      <button class="btn-secondary" style="flex:1" onclick="openChatFor(${job.id})">💬 Chat</button>
+      <button class="${isApplied?'btn-secondary':'btn-primary'}" style="flex:2;${isApplied?'':'width:auto'}" onclick="applyJob(event,${job.id})" ${isApplied?'disabled':''} id="detail-apply-btn">
+        ${isApplied ? '✅ Applied!' : 'Apply Now'}
+      </button>
+    </div>
+  `;
+  goScreen('job');
+}
+
+// ── APPLY ──────────────────────────────────────────────────
+async function applyJob(e, id) {
+  if (e) e.stopPropagation();
+  if (state.applied.includes(id)) return;
+  if (!state.loggedIn) { goLogin(); return; }
+  const res = await fetch('/api/apply', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({job_id:id})}).then(r=>r.json());
+  if (res.success) {
+    state.applied = res.applied;
+    showToast();
+    renderJobs();
+  }
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// ── CHAT ───────────────────────────────────────────────────
+function renderChatList() {
+  const jobs = state.jobs.slice(0,3);
+  document.getElementById('chat-list').innerHTML = jobs.map((job,i)=>{
+    const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
+    return `
+    <div class="card row" onclick="openChatFor(${job.id})">
+      <div class="avatar" style="width:40px;height:40px;background:linear-gradient(135deg,${color},${color}99);font-size:14px;box-shadow:0 2px 8px ${color}44">${job.avatar}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:800;font-size:15px;color:#F1F5F9">${job.employer}</div>
+        <div style="font-size:13px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Re: ${job.title}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function openChatFor(jobId) {
+  state.currentChatJobId = jobId;
+  const job = state.jobs.find(j=>j.id===jobId) || {title:'',budget:'',date:'',employer:''};
+  document.getElementById('chat-employer-name').textContent = job.employer;
+  document.getElementById('chat-job-header').textContent = `Re: ${job.title} · ${job.budget} · ${job.date}`;
+  const msgs = await fetch(`/api/messages/${jobId}`).then(r=>r.json());
+  renderChatMessages(msgs);
+  goScreen('chat-detail');
+}
+
+function renderChatMessages(msgs) {
+  document.getElementById('chat-messages').innerHTML = msgs.map(m=>`
+    <div style="display:flex;justify-content:${m.from_user==='me'?'flex-end':'flex-start'};margin-bottom:10px">
+      <div class="chat-bubble ${m.from_user==='me'?'me':'them'}">
+        <div>${m.text}</div>
+        <div class="chat-time">${m.time}</div>
+      </div>
+    </div>`).join('');
+  const box = document.getElementById('chat-messages-box');
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendMsg() {
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  const res = await fetch('/api/send_message',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({job_id:state.currentChatJobId,text})}).then(r=>r.json());
+  if (res.success) {
+    const msgs = await fetch(`/api/messages/${state.currentChatJobId}`).then(r=>r.json());
+    renderChatMessages(msgs);
+  }
+}
+
+// ── POST JOB ───────────────────────────────────────────────
+async function publishJob() {
+  if (!state.loggedIn) { goLogin(); return; }
+  const data = {
+    title:       document.getElementById('post-title').value,
+    date:        document.getElementById('post-date').value,
+    budget:      document.getElementById('post-budget').value,
+    location:    document.getElementById('post-location').value,
+    category:    document.getElementById('post-category').value,
+    description: document.getElementById('post-desc').value,
+  };
+  const res = await fetch('/api/post_job',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json());
+  if (res.success) {
+    ['post-title','post-date','post-budget','post-location','post-contact','post-desc'].forEach(id=>document.getElementById(id).value='');
+    alert('Job posted!');
+    await loadJobs();
+    goScreen('home');
+  }
+}
+
+// ── AUTH ───────────────────────────────────────────────────
+let loginStep = 'login';
+function toggleLoginStep() {
+  loginStep = loginStep === 'login' ? 'register' : 'login';
+  const isReg = loginStep === 'register';
+  document.getElementById('login-title').textContent = isReg ? 'Join QuickHire' : 'Welcome back';
+  document.getElementById('register-fields').style.display = isReg ? 'flex' : 'none';
+  document.getElementById('sydney-notice').style.display = isReg ? 'block' : 'none';
+  document.getElementById('login-submit-btn').textContent = isReg ? 'Create Account' : 'Log In';
+  document.getElementById('login-toggle-btn').textContent = isReg ? 'Already have an account? Log in' : "Don't have an account? Sign up";
+}
+
+async function doLogin() {
+  const data = {
+    name:     document.getElementById('login-name').value || 'Sydney User',
+    email:    document.getElementById('login-email').value,
+    password: document.getElementById('login-password').value,
+  };
+  const res = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json());
+  if (res.success) {
+    state.loggedIn = true;
+    state.userName = res.name;
+    updateAuthUI();
+    goScreen('home');
+  }
+}
+
+async function doLogout() {
+  await fetch('/api/logout',{method:'POST'});
+  state.loggedIn = false;
+  state.userName = '';
+  state.applied  = [];
+  updateAuthUI();
+  goScreen('home');
+}
+
+function updateAuthUI() {
+  const btn = document.getElementById('header-login-btn');
+  btn.textContent = state.loggedIn ? '👤 Me' : 'Log In';
+  btn.onclick = () => goScreen(state.loggedIn ? 'profile' : 'login');
+  document.getElementById('nav-profile-label').textContent = state.loggedIn ? 'Me' : 'Login';
+}
+
+function renderProfile() {
+  document.getElementById('profile-name').textContent = state.userName || 'Your Name';
+  document.getElementById('profile-avatar').textContent = (state.userName || 'YO').substring(0,2).toUpperCase();
+  document.getElementById('applied-count').textContent = state.applied.length;
+}
+
+// ── START ──────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

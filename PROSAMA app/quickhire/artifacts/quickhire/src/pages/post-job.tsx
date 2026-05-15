@@ -8,14 +8,8 @@ interface PostJobProps {
 export default function PostJob({ navigate }: PostJobProps) {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
-    title: "",
-    company: "",
-    location: "",
-    type: "Full-time",
-    salary: "",
-    tags: "",
-    description: "",
-    urgent: false,
+    title: "", company: "", location: "", type: "Full-time",
+    salary: "", tags: "", description: "", urgent: false,
   });
 
   const set = (k: string, v: string | boolean) => setForm((f) => ({ ...f, [k]: v }));
@@ -23,7 +17,7 @@ export default function PostJob({ navigate }: PostJobProps) {
   if (submitted) {
     return (
       <div className="post-success">
-        <div className="success-icon">✓</div>
+        <div className="success-icon">🎉</div>
         <h2>Job Posted!</h2>
         <p>Your listing is live. Applicants will start rolling in soon.</p>
         <button onClick={() => navigate("feed")}>← Back to Feed</button>
@@ -70,37 +64,22 @@ export default function PostJob({ navigate }: PostJobProps) {
           <h2>Role Details</h2>
           <div className="field">
             <label>Job Title *</label>
-            <input
-              type="text"
-              placeholder="e.g. Senior React Developer"
-              value={form.title}
-              onChange={(e) => set("title", e.target.value)}
-            />
+            <input type="text" placeholder="e.g. Senior React Developer" value={form.title} onChange={e => set("title", e.target.value)} />
           </div>
           <div className="form-row">
             <div className="field">
               <label>Company Name *</label>
-              <input
-                type="text"
-                placeholder="e.g. Atlassian"
-                value={form.company}
-                onChange={(e) => set("company", e.target.value)}
-              />
+              <input type="text" placeholder="e.g. Atlassian" value={form.company} onChange={e => set("company", e.target.value)} />
             </div>
             <div className="field">
               <label>Location *</label>
-              <input
-                type="text"
-                placeholder="e.g. Sydney CBD / Remote"
-                value={form.location}
-                onChange={(e) => set("location", e.target.value)}
-              />
+              <input type="text" placeholder="e.g. Sydney CBD / Remote" value={form.location} onChange={e => set("location", e.target.value)} />
             </div>
           </div>
           <div className="form-row">
             <div className="field">
               <label>Employment Type</label>
-              <select value={form.type} onChange={(e) => set("type", e.target.value)}>
+              <select value={form.type} onChange={e => set("type", e.target.value)}>
                 <option>Full-time</option>
                 <option>Part-time</option>
                 <option>Contract</option>
@@ -110,39 +89,30 @@ export default function PostJob({ navigate }: PostJobProps) {
             </div>
             <div className="field">
               <label>Salary Range</label>
-              <input
-                type="text"
-                placeholder="e.g. $120k–$150k"
-                value={form.salary}
-                onChange={(e) => set("salary", e.target.value)}
-              />
+              <input type="text" placeholder="e.g. $120k–$150k" value={form.salary} onChange={e => set("salary", e.target.value)} />
             </div>
           </div>
           <div className="field">
             <label>Skills / Tags</label>
-            <input
-              type="text"
-              placeholder="e.g. React, TypeScript, Node.js (comma separated)"
-              value={form.tags}
-              onChange={(e) => set("tags", e.target.value)}
-            />
+            <input type="text" placeholder="e.g. React, TypeScript, Node.js (comma separated)" value={form.tags} onChange={e => set("tags", e.target.value)} />
           </div>
         </div>
+
         <div className="form-section">
           <h2>Job Description</h2>
           <div className="field">
             <label>Description *</label>
             <textarea
               rows={8}
-              placeholder="Tell candidates about the role, responsibilities, requirements, and company culture."
+              placeholder="Tell candidates about the role, responsibilities, requirements, and why they should join..."
               value={form.description}
-              onChange={(e) => set("description", e.target.value)}
+              onChange={e => set("description", e.target.value)}
             />
           </div>
           <div className="urgent-toggle">
             <div className="toggle-info">
               <strong>Mark as Urgent</strong>
-              <span>Highlights your listing with a badge</span>
+              <span>Highlights your listing with a 🔥 badge</span>
             </div>
             <button
               className={`toggle-btn ${form.urgent ? "on" : ""}`}
@@ -152,18 +122,18 @@ export default function PostJob({ navigate }: PostJobProps) {
             </button>
           </div>
         </div>
+
         <div className="form-actions">
           <button className="cancel-btn" onClick={() => navigate("feed")}>Cancel</button>
           <button
             className="submit-btn"
-            onClick={() => {
-              if (form.title && form.company) setSubmitted(true);
-            }}
+            onClick={() => { if (form.title && form.company) setSubmitted(true); }}
           >
             Publish Listing →
           </button>
         </div>
       </div>
+
       <style>{`
         .post-job { padding: 36px 0 60px; max-width: 720px; }
         .post-header { margin-bottom: 32px; }
@@ -236,11 +206,7 @@ export default function PostJob({ navigate }: PostJobProps) {
           display: block;
         }
         .toggle-btn.on .toggle-knob { transform: translateX(22px); }
-        .form-actions {
-          display: flex;
-          justify-content: flex-end;
-          gap: 12px;
-        }
+        .form-actions { display: flex; justify-content: flex-end; gap: 12px; }
         .cancel-btn {
           padding: 13px 24px;
           border-radius: 10px;

@@ -1,3 +1,4 @@
+import "leaflet/dist/leaflet.css";
 import { useState } from "react";
 import Navbar from "./components/layout/Navbar";
 import Feed from "./pages/feed";
@@ -22,11 +23,63 @@ export interface Job {
 }
 
 export const SAMPLE_JOBS: Job[] = [
-  { id: 1, title: "Senior React Developer", company: "Atlassian", location: "Sydney CBD", type: "Full-time", salary: "$150k–$180k", tags: ["React", "TypeScript", "Node.js"], posted: "2 days ago", urgent: true, logo: "AT" },
-  { id: 2, title: "UX Designer", company: "Canva", location: "Surry Hills", type: "Full-time", salary: "$120k–$150k", tags: ["Figma", "Design Systems"], posted: "1 week ago", logo: "CA" },
-  { id: 3, title: "Data Engineer", company: "Afterpay", location: "Melbourne / Remote", type: "Hybrid", salary: "$130k–$160k", tags: ["Python", "SQL", "AWS"], posted: "3 days ago", logo: "AP" },
-  { id: 4, title: "Product Manager", company: "Xero", location: "Sydney", type: "Full-time", salary: "$140k–$170k", tags: ["Product Strategy"], posted: "5 days ago", logo: "XE" },
-  { id: 5, title: "Backend Engineer", company: "SafetyCulture", location: "Surry Hills", type: "Full-time", salary: "$125k–$155k", tags: ["Go", "Kubernetes"], posted: "1 day ago", logo: "SC" },
+  {
+    id: 1,
+    title: "Senior React Developer",
+    company: "Atlassian",
+    location: "Sydney CBD",
+    type: "Full-time",
+    salary: "$130k–$160k",
+    tags: ["React", "TypeScript", "Node.js"],
+    posted: "2d ago",
+    urgent: true,
+    logo: "AT",
+  },
+  {
+    id: 2,
+    title: "UX Designer",
+    company: "Canva",
+    location: "Surry Hills",
+    type: "Full-time",
+    salary: "$110k–$135k",
+    tags: ["Figma", "User Research", "Prototyping"],
+    posted: "1d ago",
+    logo: "CA",
+  },
+  {
+    id: 3,
+    title: "Data Engineer",
+    company: "Afterpay",
+    location: "Melbourne / Remote",
+    type: "Hybrid",
+    salary: "$120k–$145k",
+    tags: ["Python", "Spark", "dbt", "SQL"],
+    posted: "3d ago",
+    urgent: true,
+    logo: "AP",
+  },
+  {
+    id: 4,
+    title: "Product Manager",
+    company: "Xero",
+    location: "Sydney",
+    type: "Full-time",
+    salary: "$140k–$170k",
+    tags: ["Roadmapping", "Agile", "B2B SaaS"],
+    posted: "5d ago",
+    logo: "XE",
+  },
+  {
+    id: 5,
+    title: "Backend Engineer",
+    company: "SafetyCulture",
+    location: "Surry Hills",
+    type: "Hybrid",
+    salary: "$115k–$140k",
+    tags: ["Go", "Kubernetes", "PostgreSQL"],
+    posted: "1d ago",
+    logo: "SC",
+  },
 ];
 
 export default function App() {
@@ -49,7 +102,7 @@ export default function App() {
         {page === "profile" && <Profile navigate={navigate} />}
       </main>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
           --bg: #0a0a0f;

@@ -6,28 +6,28 @@ interface MessagesProps {
 }
 
 const CONVOS = [
-  { id: 1, name: "Sarah @ Atlassian", role: "Talent Partner", avatar: "SA", preview: "Hi! We've reviewed your profile...", time: "2m", unread: 1 },
-  { id: 2, name: "James @ Canva", role: "Engineering Manager", avatar: "JA", preview: "Can you do a call Thursday?", time: "1h", unread: 0 },
-  { id: 3, name: "Priya @ Afterpay", role: "Recruiter", avatar: "PR", preview: "Thanks for applying — moving to next round", time: "3h", unread: 0 },
-  { id: 4, name: "PROSAMA Team", role: "Platform", avatar: "PS", preview: "Welcome to PROSAMA! Complete your profile", time: "1d", unread: 0 },
+  { id: 1, name: "Sarah @ Atlassian", role: "Talent Partner", avatar: "SA", preview: "Hi! We'd love to connect.", time: "10:02 AM", unread: 2 },
+  { id: 2, name: "James @ Canva", role: "Engineering Manager", avatar: "JA", preview: "Can you do a call Thursday?", time: "9:00 AM", unread: 0 },
+  { id: 3, name: "Priya @ Afterpay", role: "Recruiter", avatar: "PR", preview: "Thanks for applying!", time: "Yesterday", unread: 1 },
+  { id: 4, name: "PROSAMA Team", role: "Platform", avatar: "PS", preview: "Welcome to PROSAMA!", time: "2d ago", unread: 0 },
 ];
 
 const MESSAGES: Record<number, { from: "me" | "them"; text: string; time: string }[]> = {
   1: [
     { from: "them", text: "Hi there! I'm Sarah from Atlassian's talent team.", time: "10:02 AM" },
-    { from: "them", text: "I came across your profile and think you'd be a great fit for our team.", time: "10:03 AM" },
-    { from: "me", text: "Hi Sarah! Thanks for reaching out — definitely interested.", time: "10:15 AM" },
-    { from: "them", text: "It's a full-stack focused role, mostly React/TS on the frontend with Node backend.", time: "10:17 AM" },
+    { from: "them", text: "I came across your profile and think you'd be a great fit for our role.", time: "10:03 AM" },
+    { from: "me", text: "Hi Sarah! Thanks for reaching out — definitely interested. What does the role involve?", time: "10:05 AM" },
+    { from: "them", text: "It's a full-stack focused role, mostly React/TS on the frontend with Node on backend.", time: "10:07 AM" },
   ],
   2: [
     { from: "them", text: "Hey! I'm James, engineering manager at Canva.", time: "9:00 AM" },
-    { from: "them", text: "Can you do a call Thursday at 2pm? We'd love to learn more about your background.", time: "9:05 AM" },
+    { from: "them", text: "Can you do a call Thursday at 2pm? We'd love to learn more about your background.", time: "9:01 AM" },
   ],
   3: [
     { from: "them", text: "Thanks for applying to Afterpay — we're moving you to the next round!", time: "Yesterday" },
   ],
   4: [
-    { from: "them", text: "Welcome to PROSAMA! Complete your profile to get noticed by top companies.", time: "3d" },
+    { from: "them", text: "Welcome to PROSAMA! Complete your profile to get noticed by top employers.", time: "2d ago" },
   ],
 };
 
@@ -73,6 +73,7 @@ export default function Messages({ navigate }: MessagesProps) {
             </button>
           ))}
         </aside>
+
         <div className="chat-area">
           <div className="chat-header">
             <div className="chat-avatar">{activeConvo.avatar}</div>
@@ -103,6 +104,7 @@ export default function Messages({ navigate }: MessagesProps) {
           </div>
         </div>
       </div>
+
       <style>{`
         .messages-page { padding: 36px 0 0; height: calc(100vh - 68px); display: flex; flex-direction: column; }
         .messages-header { margin-bottom: 20px; }

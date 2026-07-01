@@ -45,40 +45,8 @@ TechPurposeReact + TypeScriptUI frameworkReact RouterClient-side navigationFetch
 DevOps
 TechPurposeGitHubVersion control & collaborationpnpm MonorepoPackage managementGitHub ActionsCI/CD pipeline — automated testing on every push
 
-📁 Project Structure
-PROSAMA--mobile-app/
-│
-├── artifacts/
-│   ├── api-server/src/          # Backend (Pprolkt)
-│   │   ├── routes/
-│   │   │   ├── auth.ts          # Login, logout, session
-│   │   │   ├── jobs.ts          # Job CRUD + filter + stats
-│   │   │   ├── messages.ts      # Per-job messaging
-│   │   │   └── applications.ts  # Job applications
-│   │   ├── lib/
-│   │   │   ├── db/src/schema/
-│   │   │   │   └── jobs.ts      # Drizzle DB schema
-│   │   │   └── suburbs.ts       # Sydney suburb coordinates
-│   │   └── app.ts               # Express server entry point
-│   │
-│   └── quickhire/src/           # Frontend (SaruulBattsengel)
-│       ├── pages/
-│       │   ├── feed.tsx         # Job feed + category filter
-│       │   ├── job-detail.tsx   # Single job + apply + messages
-│       │   ├── post-job.tsx     # Post a new job form
-│       │   ├── messages.tsx     # Inbox — applied jobs threads
-│       │   └── profiles.tsx     # Login/logout + applied jobs
-│       ├── components/
-│       │   └── layout/
-│       │       └── Navbar.tsx   # Dark sticky navbar
-│       └── App.tsx              # Root router + page layout
-│
-├── PROSAMA/                     # Flask prototype (Python)
-│   ├── templates/
-│   ├── app.py
-│   └── requirements.txt
-│
-└── requirement.txt
+<img width="752" height="1096" alt="image" src="https://github.com/user-attachments/assets/09dece9d-3f85-46c8-b69e-02096c9398a5" />
+
 
 🔌 API Endpoints
 MethodEndpointDescriptionAuth RequiredGET/api/auth/sessionCheck current login statusNoPOST/api/auth/loginLogin with name + emailNoPOST/api/auth/logoutDestroy sessionYesGET/api/jobsGet all jobs (filter by ?category=)NoGET/api/jobs/statsTotal jobs, avg budget, category countsNoGET/api/jobs/:idGet single job by IDNoPOST/api/jobsCreate a new job postYesPOST/api/applyApply for a jobYesGET/api/messages/:jobIdGet messages for a jobYesPOST/api/messages/:jobIdSend a message for a jobYes
